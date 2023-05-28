@@ -1,0 +1,15 @@
+.DS_Store
+
+## Editor directories and files
+.idea
+.vscode
+
+## Node.js/Nuxt
+**/node_modules/
+**/dist/
+**/.nuxt
+**/.output
+
+## Other
+other/
+**/.env
