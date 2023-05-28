@@ -3,9 +3,9 @@
 /// ///////////////////////////////////////////////////////////////////////////
 
 const DEFAULT_CELLS_COUNT = 10;
-const DEFAULT_CELLS_SIZE_X = 15;
+const DEFAULT_CELLS_SIZE_X = 20;
 const DEFAULT_CELLS_SIZE_Y = 20;
-const CELL_SIZE = 5;
+const CELL_SIZE = 30;
 
 const UNOPENED_CELL_COLOR = 'rgb(192,192,192)';
 const UNOPENED_CELL_BORDER_COLOR = 'black';
@@ -48,7 +48,6 @@ const minesPotions = generateMinesPositions(
   DEFAULT_CELLS_COUNT
 );
 cells = populateCellsWithMines(cells, minesPotions);
-console.log(cells);
 
 startListeningLeftClick(cells);
 startListeningRightClick(cells);
@@ -188,8 +187,9 @@ function populateCellsWithMines(cells, minesPotions) {
 function drawMine(x, y) {
   const { canvasCtx } = getCanvas();
 
-  canvasCtx.fillStyle = 'black';
-  canvasCtx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+  const magicRatio = 0.75;
+  canvasCtx.font = `${CELL_SIZE * magicRatio}px Arial`;
+  canvasCtx.fillText(BOMB_SYMBOL, x, y + CELL_SIZE * magicRatio);
 }
 
 function markCellAsMine(x, y) {
@@ -228,17 +228,18 @@ function startListeningLeftClick(cells) {
     const { cell, m, n } = getCell(event, cells);
 
     if (cell.isMine) {
-      drawMine(n * CELL_SIZE, m * CELL_SIZE);
+      if (cell.state !== CELL_STATE.OPENED) {
+        cell.state = CELL_STATE.OPENED;
+        drawMine(n * CELL_SIZE, m * CELL_SIZE);
+        gameOver();
+      }
     } else if (cell.around === 0) {
       cell.state = CELL_STATE.OPENED;
       drawOpenedCell(n, m);
-
-      console.log(cell);
       checkCellsAraound(cell);
     } else if (cell.around > 0) {
       cell.state = CELL_STATE.OPENED;
       drawOpenedCell(n, m, cell.around);
-      console.log(cell);
     }
   });
 }
@@ -297,4 +298,17 @@ function checkCellsAraound(cell) {
       drawOpenedCell(newN, newM, offsetCell.around);
     }
   }
+}
+
+function gameOver() {
+  for (const mineSet of cells) {
+    for (const cell of mineSet) {
+      if (cell.isMine) {
+        cell.state = CELL_STATE.OPENED;
+        drawMine(cell.n * CELL_SIZE, cell.m * CELL_SIZE);
+      }
+    }
+  }
+  // eslint-disable-next-line no-undef
+  setTimeout(() => (alert('Game over. Try again')), 500);
 }
