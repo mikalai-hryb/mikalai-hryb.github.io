@@ -35,10 +35,37 @@ const CELL_OFFSETS = [
   [1, -1], [1, 0], [1, 1]
 ];
 
+const DEFAULT_SETTINGS = {
+  small: {
+    name: 'Beginner',
+    height: 10,
+    width: 10,
+    mines: 10
+  },
+  middle: {
+    name: 'Intermediate',
+    height: 15,
+    width: 15,
+    mines: 25
+  },
+  big: {
+    name: 'Expert',
+    height: 30,
+    width: 30,
+    mines: 100
+  },
+  custom: {
+    name: 'Custom',
+    height: 10,
+    width: 15,
+    mines: 10
+  }
+};
+
 /// ///////////////////////////////////////////////////////////////////////////
 /// GAME
 /// ///////////////////////////////////////////////////////////////////////////
-
+addSettingsPanel();
 drawEmptyBoard();
 drawCells();
 
@@ -55,6 +82,51 @@ startListeningRightClick(cells);
 /// ///////////////////////////////////////////////////////////////////////////
 /// FUNCTIONS
 /// ///////////////////////////////////////////////////////////////////////////
+function addSettingsPanel() {
+  const bodyHtmlEl = document.createElement('div');
+  bodyHtmlEl.innerHTML = `
+  <div>
+    <table>
+      <tr>
+        <td></td>
+        <td>Height</td>
+        <td>Width</td>
+        <td>Mines</td>
+      </tr>
+      
+      <tr>
+        <td><label><input type="radio" name="field" id="small"> <strong>${DEFAULT_SETTINGS.small.name}</strong></label></td>
+        <td>${DEFAULT_SETTINGS.small.height}</td>
+        <td>${DEFAULT_SETTINGS.small.width}</td>
+        <td>${DEFAULT_SETTINGS.small.mines}</td>
+        </tr>
+      <tr>
+      
+      <td><label><input type="radio" name="field" id="middle"> <strong>${DEFAULT_SETTINGS.middle.name}</strong></label></td>
+      <td>${DEFAULT_SETTINGS.middle.height}</td>
+      <td>${DEFAULT_SETTINGS.middle.width}</td>
+      <td>${DEFAULT_SETTINGS.middle.mines}</td>
+      </tr>
+
+      <tr>
+        <td><label><input type="radio" name="field" checked="checked" id="big"> <strong>${DEFAULT_SETTINGS.big.name}</strong></label></td>
+        <td>${DEFAULT_SETTINGS.big.height}</td>
+        <td>${DEFAULT_SETTINGS.big.width}</td>
+        <td>${DEFAULT_SETTINGS.big.mines}</td>
+      </tr>
+
+      <tr>
+        <td><label><input type="radio" name="field" id="custom"> ${DEFAULT_SETTINGS.custom.name}</label></td>
+        <td><input type="text" value="${DEFAULT_SETTINGS.big.height}" id="custom_height" class="dialog-text-input" onfocus="$('#custom').attr('checked', true);"></td>
+        <td><input type="text" value="${DEFAULT_SETTINGS.big.width}" id="custom_width" class="dialog-text-input" onfocus="$('#custom').attr('checked', true);"></td>
+        <td><input type="text" value="${DEFAULT_SETTINGS.big.mines}" id="custom_mines" class="dialog-text-input" onfocus="$('#custom').attr('checked', true);"></td>
+      </tr>
+    </table>
+  </div>
+`;
+  document.body.appendChild(bodyHtmlEl);
+}
+
 function drawEmptyBoard() {
   const bodyHtmlEl = document.createElement('div');
 
